@@ -26,7 +26,7 @@ module.exports = function() {
     Html2Js.prototype.onCompile = function(generatedFiles) {
         var bundle = '';
         var options = this.options;
-        var joinToKeys = Object.keys(this.joinTo);
+        var joinToKeys = Object.keys(this.joinTo);        
 
         for (var i = 0; i < joinToKeys.length; i++) {
             var path = this.publicPath + pathUtils.sep + joinToKeys[i];
@@ -44,7 +44,7 @@ module.exports = function() {
         }
     }
 
-    function Html2Js(cfg) {
+    function Html2Js(cfg) {        
         cfg = cfg || {};
         this.options = {
             base: 'src',
@@ -56,8 +56,8 @@ module.exports = function() {
             target: 'js',
             htmlmin: {}
         };
-        this.joinTo = cfg.files.templates.joinTo;
-        this.publicPath = cfg.paths.public;
+        this.joinTo = cfg.files ? cfg.files.templates.joinTo : null;
+        this.publicPath = cfg.paths ? cfg.paths.public : null;
         this.moduleNames = [];
 
         var config = cfg.plugins && cfg.plugins.html2js;
@@ -88,8 +88,8 @@ module.exports = function() {
     }
 
     function getContent(content, quoteChar, indentString, htmlmin) {
-        if (Object.keys(htmlmin).length) {
-            content = minify(content, htmlmin);
+        if (Object.keys(htmlmin).length) {            
+            content = minify(content, htmlmin);            
         }
 
         return escapeContent(content, quoteChar, indentString);
