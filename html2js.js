@@ -12,21 +12,27 @@ module.exports = function() {
     Html2Js.prototype.compile = function(content, path, callback) {
         var options = this.options;
         var moduleName = normalizePath(pathUtils.relative(options.base, path));
-        this.moduleNames.push("'" + moduleName + "'");
 
-        if (options.target === 'js') {
-            return callback(null, compileTemplate(moduleName, content, options.quoteChar, options.indentString, options.useStrict, options.htmlmin));
-        } else if (options.target === 'coffee') {
-            return callback(null, compileCoffeeTemplate(moduleName, content, options.quoteChar, options.indentString, options.htmlmin));
-        } else {
-            return callback('Unknown target "' + options.target + '" specified');
+        //Hack to not include any files not in the app dir since brunch passes in every file matching the extension
+        if (moduleName.indexOf('..') == -1) {
+            this.moduleNames.push("'" + moduleName + "'");
+
+            if (options.target === 'js') {
+                return callback(null, compileTemplate(moduleName, content, options.quoteChar, options.indentString, options.useStrict, options.htmlmin));
+            } else if (options.target === 'coffee') {
+                return callback(null, compileCoffeeTemplate(moduleName, content, options.quoteChar, options.indentString, options.htmlmin));
+            } else {
+                return callback('Unknown target "' + options.target + '" specified');
+            }
         }
+
+        return callback(null, null);
     };
 
     Html2Js.prototype.onCompile = function(generatedFiles) {
         var bundle = '';
         var options = this.options;
-        var joinToKeys = Object.keys(this.joinTo);        
+        var joinToKeys = Object.keys(this.joinTo);
 
         for (var i = 0; i < joinToKeys.length; i++) {
             var path = this.publicPath + pathUtils.sep + joinToKeys[i];
@@ -36,15 +42,19 @@ module.exports = function() {
                 bundle += ';';
             }
 
-            bundle += '\n\n' + fs.readFileSync(path);
+            bundle += '\n\n';
 
-            fs.writeFile(path, bundle, function(err) {
-                if (err) throw err;
-            });
+            var fileContent = fs.readFileSync(path, {encoding: 'utf-8'});            
+
+            if (fileContent.indexOf(bundle) == -1) {
+                fs.writeFile(path, bundle.concat(fileContent), function(err) {
+                    if (err) throw err;
+                });
+            }
         }
     }
 
-    function Html2Js(cfg) {        
+    function Html2Js(cfg) {
         cfg = cfg || {};
         this.options = {
             base: 'src',
@@ -80,6 +90,7 @@ module.exports = function() {
     }
 
     // convert Windows file separator URL path separator
+
     function normalizePath(p) {
         if (pathUtils.sep !== '/') {
             p = p.replace(/\\/g, '/');
@@ -88,14 +99,15 @@ module.exports = function() {
     }
 
     function getContent(content, quoteChar, indentString, htmlmin) {
-        if (Object.keys(htmlmin).length) {            
-            content = minify(content, htmlmin);            
+        if (Object.keys(htmlmin).length) {
+            content = minify(content, htmlmin);
         }
 
         return escapeContent(content, quoteChar, indentString);
     }
 
     // compile a template to an angular module
+
     function compileTemplate(moduleName, content, quoteChar, indentString, useStrict, htmlmin, process) {
         var contentModified = getContent(content, quoteChar, indentString, htmlmin, process);
         var doubleIndent = indentString + indentString;
