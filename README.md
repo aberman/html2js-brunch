@@ -13,7 +13,7 @@ To install manually:
 
 ###Options (taken from grunt-html2js project, thanks @karlgoldstein)
 
-Exmaple:
+Example:
 
 ```
 plugins: {
@@ -25,7 +25,6 @@ plugins: {
 }
 
 ```
-
 
 #### options.base
 Type: `String`
@@ -75,22 +74,6 @@ options: { indentString: '    ' }
 
 to get, for example, 4-space indents. Same goes for tabs or any other
 indent system you want to use.
-
-#### fileHeaderString: 
-Type: `String`
-Default value: ``
-
-If specified, this string  will get written at the top of the output
-Template.js file. As an example, jshint directives such as
-/* global angular: false */ can be put at the head of the file.
-
-#### fileFooterString: 
-Type: `String`
-Default value: ``
-
-If specified, this string  will get written at the end of the output
-file.  May be used in conjunction with `fileHeaderString` to wrap
-the output.
 
 #### useStrict: 
 Type: `Boolean`
