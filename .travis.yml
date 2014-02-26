@@ -1,3 +1,11 @@
 language: node_js
 node_js:
-  - "0.10"
+- '0.10'
+deploy:
+  provider: npm
+  email: rexxe98@gmail.com
+  api_key:
+    secure: PIgQZsED87+I7vrz9NKZdnu2VJ2a0Z0H5QF/bwUyBbKaSyZK2sTxTD84hR7AtXBoYiXCkSeVLy297oytEKzge9bQYdwx2HORnTZ7FVgewjsbRSgGYbtUMU94RZGFYX71wlyl+8ft1zJy5EfJ8w2VIKZlRIhUyn/V6NTtu2DxQdg=
+  on:
+    tags: true
+    repo: aberman/html2js-brunch
