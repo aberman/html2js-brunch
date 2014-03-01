@@ -1,6 +1,6 @@
 ##html2js-brunch [![Build Status](https://travis-ci.org/aberman/html2js-brunch.png?branch=master)](https://travis-ci.org/aberman/html2js-brunch)
 
-Mimics [grunt-html2js](https://github.com/karlgoldstein/grunt-html2js) for brunch.
+Mimics [grunt-html2js](https://github.com/karlgoldstein/grunt-html2js) behavior for brunch.
 
 ###Usage
 
@@ -11,20 +11,45 @@ To install manually:
 * Add `"html2js-brunch": "x.y.z"` to your `package.json` in your brunch app.
 * If you want the git version of the plugin, you can use: `"html2js-brunch": "https://github.com/aberman/html2js-brunch.git"`.
 
-###Options (taken from grunt-html2js project, thanks @karlgoldstein)
-
 Example:
 
-```
+**NOTE: In order for this plugin to recognize templates, they must have a .tpl.html extension.**
+
+The following example will create a single JavaScript file called templates-app.js in the public/js directory with an Angular module named 'templates-app', which will automatically load up all the templates located in the app/scripts/ directory.  To keep things simple, the module name will always match the name of the concatenated file.  By setting the base in the plugin, the templates can be referenced starting from that directory.  For example, if your template is in app/scripts/somedir/myTemplate.tpl.html, you can reference the template as 'somedir/myTemplate.tpl.html' by setting the base to 'app/scripts'. Furthermore, the templates can be run through html-minifier removing all comments by setting the htmlmin option with the removeComments set to true.
+
+```JavaScript
+files: {
+    templates: {
+        joinTo: {
+            'js/templates-app.js': /^app\/scripts\//
+        }
+    }
+}
 plugins: {
 	html2js: {
 		options: {
-			base: 'app/scripts'
+			base: 'app/scripts',
+            htmlmin: {
+                removeComments: true
+            }
 		}
 	}
 }
-
 ```
+
+In your Angular module:
+
+```JavaScript
+angular.module('yourmodule', ['templates-app'])
+    .config(['$routeProvider', function ($routeProvidear) {
+        $routeProvider.when('/yourpath', {
+            templateUrl:'somedir/myTemplate.tpl.html',
+            ...
+```
+
+###Options (taken from grunt-html2js project, thanks @karlgoldstein)
+
+To keep things simple, some options from the grunt-html2js project have been removed.
 
 #### options.base
 Type: `String`
@@ -37,16 +62,6 @@ Type: `String`
 Default value: `'js'`
 
 Language of the output file. Possible values: `'coffee'`, `'js'`.
-
-#### options.module
-Type: `String` or `Function`
-Default value: `templates-TARGET` 
-
-The name of the parent Angular module for each set of templates.  Defaults to the task target prefixed by `templates-`.
-
-The value of this argument can be a string or a function.  The function should expect the module file path as an argument, and it should return the name to use for the parent Angular module.
-
-If no bundle module is desired, set this to false.
 
 #### options.quoteChar
 Type: `Character`
@@ -106,3 +121,7 @@ options: {
   }
 }
 ```
+
+TODO:
+
+* More tests

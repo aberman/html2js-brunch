@@ -7,7 +7,7 @@ var fs = require('fs');
 module.exports = function() {
     Html2Js.prototype.brunchPlugin = true;
     Html2Js.prototype.type = 'template';
-    Html2Js.prototype.extension = 'html';
+    Html2Js.prototype.extension = 'tpl.html';
 
     Html2Js.prototype.compile = function(content, path, callback) {
         var options = this.options;
@@ -36,7 +36,7 @@ module.exports = function() {
 
         for (var i = 0; i < joinToKeys.length; i++) {
             var path = this.publicPath + pathUtils.sep + joinToKeys[i];
-            var targetModule = options.module || pathUtils.basename(path, '.js');
+            var targetModule = pathUtils.basename(path, '.js');
             bundle = "angular.module('" + targetModule + "', [" + this.moduleNames.join(', ') + "])";
             if (options.target === 'js') {
                 bundle += ';';
@@ -57,11 +57,8 @@ module.exports = function() {
     function Html2Js(cfg) {
         cfg = cfg || {};
         this.options = {
-            base: 'src',
-            module: '',
-            quoteChar: '"',
-            fileHeaderString: '',
-            fileFooterString: '',
+            base: 'src',            
+            quoteChar: '"',           
             indentString: '    ',
             target: 'js',
             htmlmin: {}
