@@ -44,7 +44,7 @@ module.exports = function() {
 
         for (var key in this.joinTo) {
             var path = this.publicPath + pathUtils.sep + key;
-            var targetModule = pathUtils.basename(path, '.js');
+            var targetModule = this.options.moduleName || pathUtils.basename(path, '.js');
             var filter = this.joinTo[key];
 
             var moduleNameVals = [];
@@ -79,6 +79,7 @@ module.exports = function() {
             quoteChar: '"',
             indentString: '    ',
             target: 'js',
+            moduleName: null,
             htmlmin: {}
         };
         this.joinTo = cfg.files ? cfg.files.templates.joinTo : null;

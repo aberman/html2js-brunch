@@ -15,7 +15,7 @@ Example:
 
 **NOTE: In order for this plugin to recognize templates, they must have a .tpl.html extension.**
 
-The following example will create a single JavaScript file called templates-app.js in the public/js directory with an Angular module named 'templates-app', which will automatically load up all the templates located in the app/scripts/ directory.  To keep things simple, the module name will always match the name of the concatenated file.  By setting the base in the plugin, the templates can be referenced starting from that directory.  For example, if your template is in app/scripts/somedir/myTemplate.tpl.html, you can reference the template as 'somedir/myTemplate.tpl.html' by setting the base to 'app/scripts'. Furthermore, the templates can be run through html-minifier removing all comments by setting the htmlmin option with the removeComments set to true.
+The following example will create a single JavaScript file called templates-app.js in the public/js directory with an Angular module named 'templates-app', which will automatically load up all the templates located in the app/scripts/ directory.  By default, the module name will match the name of the concatenated file.  By setting the base in the plugin, the templates can be referenced starting from that directory.  For example, if your template is in app/scripts/somedir/myTemplate.tpl.html, you can reference the template as 'somedir/myTemplate.tpl.html' by setting the base to 'app/scripts'. Furthermore, the templates can be run through html-minifier removing all comments by setting the htmlmin option with the removeComments set to true.
 
 ```JavaScript
 files: {
@@ -67,7 +67,7 @@ Language of the output file. Possible values: `'coffee'`, `'js'`.
 Type: `Character`
 Default value: `"`
 
-Strings are quoted with double-quotes by default.  However, for projects 
+Strings are quoted with double-quotes by default.  However, for projects
 that want strict single quote-only usage, you can specify:
 
 ```
@@ -90,7 +90,7 @@ options: { indentString: '    ' }
 to get, for example, 4-space indents. Same goes for tabs or any other
 indent system you want to use.
 
-#### useStrict: 
+#### useStrict:
 Type: `Boolean`
 Default value: ``
 
@@ -100,6 +100,13 @@ module.  Useful for global strict jshint settings.
 ```
 options: { useStrict: true }
 ```
+
+#### moduleName:
+Type: `String`
+Default value: `null`
+
+If not set, the module name will match the name of the concatenated file.
+
 
 #### htmlmin:
 Type: `Object`
