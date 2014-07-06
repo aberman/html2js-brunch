@@ -1,6 +1,6 @@
 {
   "name": "html2js-brunch",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Mimics the behavior of grunt-html2js",
   "homepage": "https://github.com/aberman/html2js-brunch",
   "main": "./html2js.js",
@@ -29,6 +29,6 @@
     "node": ">= 0.8.0"
   },
   "dependencies": {
-    "html-minifier": "~0.5.5"
+    "html-minifier": "~0.6.3"
   }
 }

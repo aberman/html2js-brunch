@@ -44,7 +44,7 @@ module.exports = function() {
 
             bundle += '\n\n';
 
-            var fileContent = fs.readFileSync(path, {encoding: 'utf-8'});            
+            var fileContent = fs.readFileSync(path, {encoding: 'utf-8'});
 
             if (fileContent.indexOf(bundle) == -1) {
                 fs.writeFile(path, bundle.concat(fileContent), function(err) {
@@ -52,13 +52,13 @@ module.exports = function() {
                 });
             }
         }
-    }
+    };
 
     function Html2Js(cfg) {
         cfg = cfg || {};
         this.options = {
-            base: 'src',            
-            quoteChar: '"',           
+            base: 'src',
+            quoteChar: '"',
             indentString: '    ',
             target: 'js',
             htmlmin: {}
@@ -97,7 +97,12 @@ module.exports = function() {
 
     function getContent(content, quoteChar, indentString, htmlmin) {
         if (Object.keys(htmlmin).length) {
-            content = minify(content, htmlmin);
+            var optionArray = [];
+            for (var i in htmlmin) {
+                optionArray.push([i, htmlmin[i]]);
+            }
+            
+            content = minify(content, optionArray);
         }
 
         return escapeContent(content, quoteChar, indentString);
