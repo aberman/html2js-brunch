@@ -97,12 +97,12 @@ module.exports = function() {
 
     function getContent(content, quoteChar, indentString, htmlmin) {
         if (Object.keys(htmlmin).length) {
-            var optionArray = [];
+            var options = {};
             for (var i in htmlmin) {
-                optionArray.push([i, htmlmin[i]]);
+                options[i] = htmlmin[i];
             }
             
-            content = minify(content, optionArray);
+            content = minify(content, options);
         }
 
         return escapeContent(content, quoteChar, indentString);
