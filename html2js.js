@@ -7,7 +7,7 @@ var fs = require('fs');
 module.exports = function() {
     Html2Js.prototype.brunchPlugin = true;
     Html2Js.prototype.type = 'template';
-    Html2Js.prototype.extension = 'tpl.html';
+    Html2Js.prototype.extension = 'html';
 
     Html2Js.prototype.compile = function(content, path, callback) {
         var options = this.options;
