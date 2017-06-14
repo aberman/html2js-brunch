@@ -14,8 +14,8 @@ module.exports = function() {
         var moduleName = normalizePath(pathUtils.relative(options.base, path));
 
         //Hack to not include any files not in the app dir since brunch passes in every file matching the extension
-        if (moduleName.indexOf('..') == -1) {
-            this.moduleNames.push("'" + moduleName + "'");
+        if (moduleName.indexOf('..') === -1) {
+            this.moduleNames[path] = "'" + moduleName + "'";
 
             if (options.target === 'js') {
                 return callback(null, compileTemplate(moduleName, content, options.quoteChar, options.indentString, options.useStrict, options.htmlmin));
@@ -32,12 +32,30 @@ module.exports = function() {
     Html2Js.prototype.onCompile = function(generatedFiles) {
         var bundle = '';
         var options = this.options;
-        var joinToKeys = Object.keys(this.joinTo);
 
-        for (var i = 0; i < joinToKeys.length; i++) {
-            var path = this.publicPath + pathUtils.sep + joinToKeys[i];
-            var targetModule = pathUtils.basename(path, '.js');
-            bundle = "angular.module('" + targetModule + "', [" + this.moduleNames.join(', ') + "])";
+        function passesFilter(filter, modulePath) {
+            // filter may either be a regex or callable function
+            if (filter.test !== undefined) {
+                return filter.test(modulePath);
+            } else {
+                return filter(modulePath);
+            }
+        }
+
+        for (var key in this.joinTo) {
+            var path = this.publicPath + pathUtils.sep + key;
+            var targetModule = this.options.moduleName || pathUtils.basename(path, '.js');
+            var filter = this.joinTo[key];
+
+            var moduleNameVals = [];
+
+            for (var modulePath in this.moduleNames) {
+                if (passesFilter(filter, modulePath)) {
+                    moduleNameVals.push(this.moduleNames[modulePath]);
+                }
+            }
+
+            bundle = "angular.module('" + targetModule + "', [" + moduleNameVals.join(', ') + "])";
             if (options.target === 'js') {
                 bundle += ';';
             }
@@ -46,7 +64,7 @@ module.exports = function() {
 
             var fileContent = fs.readFileSync(path, {encoding: 'utf-8'});
 
-            if (fileContent.indexOf(bundle) == -1) {
+            if (fileContent.indexOf(bundle) === -1) {
                 fs.writeFile(path, bundle.concat(fileContent), function(err) {
                     if (err) throw err;
                 });
@@ -61,11 +79,12 @@ module.exports = function() {
             quoteChar: '"',
             indentString: '    ',
             target: 'js',
+            moduleName: null,
             htmlmin: {}
         };
         this.joinTo = cfg.files ? cfg.files.templates.joinTo : null;
         this.publicPath = cfg.paths ? cfg.paths.public : null;
-        this.moduleNames = [];
+        this.moduleNames = {};
 
         var config = cfg.plugins && cfg.plugins.html2js;
         if (config) {
