@@ -7,7 +7,7 @@ var fs = require('fs');
 module.exports = function() {
     Html2Js.prototype.brunchPlugin = true;
     Html2Js.prototype.type = 'template';
-    Html2Js.prototype.extension = 'tpl.html';
+    Html2Js.prototype.extension = 'html';
 
     Html2Js.prototype.compile = function(content, path, callback) {
         var options = this.options;
@@ -97,12 +97,12 @@ module.exports = function() {
 
     function getContent(content, quoteChar, indentString, htmlmin) {
         if (Object.keys(htmlmin).length) {
-            var optionArray = [];
+            var options = {};
             for (var i in htmlmin) {
-                optionArray.push([i, htmlmin[i]]);
+                options[i] = htmlmin[i];
             }
             
-            content = minify(content, optionArray);
+            content = minify(content, options);
         }
 
         return escapeContent(content, quoteChar, indentString);
